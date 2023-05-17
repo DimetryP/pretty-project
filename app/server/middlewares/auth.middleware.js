@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const client = require('../database');
-const clientRedis = require('../redis/redis');
+const { redisClient } = require('../redis/redis');
 
 const userCheckAuthData = async function(req, res, next) {
   const { login, password } = req.body;  
@@ -21,14 +21,20 @@ const userCheckAuthData = async function(req, res, next) {
   }
 }
 
-const userCheckRole = async function(req, res, next) {
-  console.log('My role is: .....');
+const userCheckIsAdministrator = async function(req, res, next) {
+  const data = await userSession(`session_${}`); 
+}
 
-  next();
+async function userSession(id, data) {
+  const payload = await redisClient.get(id);
+
+  if(!payload) await redisClient.set(id, data, { EX: 1000 * 60 * 60 * 5 });
+  
+  return payload;
 }
 
 async function checkPasswordAuth(enterPassword, fromDBPassword) {
   return await bcrypt.compare(enterPassword, new Buffer.from(fromDBPassword).toString());
 }
 
-module.exports = { userCheckAuthData, userCheckRole }; 
+module.exports = { userCheckAuthData }; 

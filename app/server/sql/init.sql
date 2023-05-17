@@ -8,23 +8,12 @@ CREATE TABLE users(
 );
 
 CREATE TABLE event_types(
-  id SERIAL PRIMARY KEY,
-  title VARCHAR(150) NOT NULL
-);
-
-CREATE TABLE events(
-  id BIGINT UNIQUE PRIMARY KEY,
-  title_id INT NOT NULL,
-  description VARCHAR(255),
-  startTime TIME NOT NULL,
-  endTime TIME NOT NULL,
-  createDate DATE NOT NULL DEFAULT CURRENT_DATE,
-  FOREIGN KEY(title_id) REFERENCES event_types(id),
-  user_id INT REFERENCES users(id) NOT NULL
+  id BIGSERIAL PRIMARY KEY,
+  title VARCHAR(200) NOT NULL
 );
 
 CREATE TABLE visitor_roles(
-  id SERIAL PRIMARY KEY,
+  id SMALLSERIAL PRIMARY KEY,
   title TEXT NOT NULL
 );
 
@@ -37,12 +26,16 @@ CREATE TABLE visitors(
   FOREIGN KEY(role_id) REFERENCES visitor_roles(id)
 );
 
-CREATE TABLE events_visitors(
-  visitor_id BIGINT,
-  event_id BIGINT,
-  PRIMARY KEY(visitor_id, event_id),
-  CONSTRAINT fk_visitor FOREIGN KEY(visitor_id) REFERENCES visitors(id),
-  CONSTRAINT fk_event FOREIGN KEY(event_id) REFERENCES events(id)
+CREATE TABLE events(
+  id BIGINT UNIQUE PRIMARY KEY,
+  title_id INT NOT NULL,
+  description VARCHAR(255),
+  startTime TIME NOT NULL,
+  endTime TIME NOT NULL,
+  createDate DATE NOT NULL DEFAULT CURRENT_DATE,
+  FOREIGN KEY(title_id) REFERENCES event_types(id),
+  user_id INT REFERENCES users(id) NOT NULL,
+  visitor_id INT REFERENCES visitors(id)
 );
 
 INSERT INTO visitor_roles (title) VALUES ('worker'), ('guardian'), ('zam_director'), ('inspection');

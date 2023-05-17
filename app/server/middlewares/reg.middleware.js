@@ -19,10 +19,10 @@ const checkUserLoginReg = async function(req, res, next) {
  
   const result = await client.query('SELECT login FROM users WHERE login = $1', [login]);
  
-  if(result.rows[0]?.login !== undefined) {
-    res.send(`${login} already has account in application`);
-  } else {
+  if(result.rows[0] === undefined) {
     next();
+  } else {
+    res.send('That user has account in application!');
   }
 }
 

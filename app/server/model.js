@@ -1,6 +1,6 @@
 const user_role = "guardian" | "administrator";
 
-class User {
+class UserModel {
   constructor(login, password, role) {
     this.login = login;
     this.password = password;
@@ -20,7 +20,7 @@ class User {
   }
 }
 
-class Visitor {
+class VisitorModel {
   constructor(id, username, surname, patronymic, visitor_role) {
     this.id = id;
     this.username = username;
@@ -30,7 +30,7 @@ class Visitor {
   }
 }
 
-class Event {
+class EventModel {
   constructor(id, title, description, startTime, endTime, created_at, user_id) {
     this.id = id;
     this.title = title;
@@ -42,4 +42,4 @@ class Event {
   }
 }
 
-module.exports = { User, Visitor, Event };
+module.exports = { UserModel, VisitorModel, EventModel };

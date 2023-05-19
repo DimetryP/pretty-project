@@ -2,7 +2,7 @@ CREATE TYPE user_role AS ENUM ('administrator', 'guardian');
 
 CREATE TABLE users(
   id SMALLSERIAL PRIMARY KEY,
-  login VARCHAR(10) NOT NULL,
+  login VARCHAR(10) UNIQUE NOT NULL,
   password bytea NOT NULL,
   user_role user_role NOT NULL DEFAULT 'guardian'
 );

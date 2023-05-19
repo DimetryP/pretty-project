@@ -8,12 +8,15 @@ const userCheckAuthData = async function(req, res, next) {
   try {
     const data = await client.query('SELECT * FROM users WHERE login = $1', [login]);
     const log = data.rows[0].login;
+    const pass = data.rows[0].password;
 
     if(log !== login) { res.send("Login isn't correct or that user hasn't account in application"); }
 
-    await checkPasswordAuth(password, data.rows[0].password).then(result => { if(result !== true) res.send("Password isn't correct"); });
+    await checkPasswordAuth(password, pass).then(result => { if(result !== true) res.send("Password isn't correct"); });
 
     req.userdata = data;
+
+    await saveUserSession(log, `${log}:${pass}`);
 
     next();
   } catch(e) {
@@ -22,19 +25,34 @@ const userCheckAuthData = async function(req, res, next) {
 }
 
 const userCheckIsAdministrator = async function(req, res, next) {
-  const data = await userSession(`session_${}`); 
+  const { login } = req.userdata.rows[0];
+
+  const session = await redisClient.get(`session_${login}`);
+
+  if(session.split(':')[1] !== "administrator") { res.send("You haven't 'administrator' role to admit that function"); }
+ 
+  next();
 }
 
-async function userSession(id, data) {
-  const payload = await redisClient.get(id);
+const userCheckIsAuthorized = async function(req, res, next) {
+  const { login } = req.body;
 
-  if(!payload) await redisClient.set(id, data, { EX: 1000 * 60 * 60 * 5 });
-  
-  return payload;
+  const session = await redisClient.get(`session_${login}`);
+  const session_login = session.split(':')[0];
+
+  if(!session_login) res.send("User not authorized in application");
+
+  next();
+}
+
+async function saveUserSession(id, data) {
+  const payload = await redisClient.get(`session_${id}`);
+
+  if(!payload) await redisClient.set(`session_${id}`, data, { EX: 1000 * 60 * 60 * 5 });
 }
 
 async function checkPasswordAuth(enterPassword, fromDBPassword) {
   return await bcrypt.compare(enterPassword, new Buffer.from(fromDBPassword).toString());
 }
 
-module.exports = { userCheckAuthData }; 
+module.exports = { userCheckAuthData, userCheckIsAdministrator, userCheckIsAuthorized  }; 

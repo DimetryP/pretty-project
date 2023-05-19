@@ -27,7 +27,7 @@ const userCheckAuthData = async function(req, res, next) {
 const userCheckIsAdministrator = async function(req, res, next) {
   const { login } = req.userdata.rows[0];
 
-  const session = await redisClient.get(`session_${login}`);
+  const session = await redisClient.get(`session:${login}`);
 
   if(session.split(':')[1] !== "administrator") { res.send("You haven't 'administrator' role to admit that function"); }
  
@@ -37,7 +37,7 @@ const userCheckIsAdministrator = async function(req, res, next) {
 const userCheckIsAuthorized = async function(req, res, next) {
   const { login } = req.body;
 
-  const session = await redisClient.get(`session_${login}`);
+  const session = await redisClient.get(`session:${login}`);
   const session_login = session.split(':')[0];
 
   if(!session_login) res.send("User not authorized in application");
@@ -46,13 +46,13 @@ const userCheckIsAuthorized = async function(req, res, next) {
 }
 
 async function saveUserSession(id, data) {
-  const payload = await redisClient.get(`session_${id}`);
+  const payload = await redisClient.get(`session:${id}`);
 
-  if(!payload) await redisClient.set(`session_${id}`, data, { EX: 1000 * 60 * 60 * 5 });
+  if(!payload) await redisClient.set(`session:${id}`, data, { EX: 1000 * 60 * 60 * 5 });
 }
 
 async function checkPasswordAuth(enterPassword, fromDBPassword) {
   return await bcrypt.compare(enterPassword, new Buffer.from(fromDBPassword).toString());
 }
 
-module.exports = { userCheckAuthData, userCheckIsAdministrator, userCheckIsAuthorized  }; 
+module.exports = { userCheckAuthData, userCheckIsAdministrator, userCheckIsAuthorized }; 

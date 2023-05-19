@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { redisClient } = require('../redis/redis');
-const { Auth } = require('../auth');
-const { Events } = require('../events');
+const { Auth } = require('../controllers/auth');
+const { Events } = require('../controllers/events');
 const { UserModel, EventModel, VisitorModel } = require('../model');
 const { checkUserRegData, checkUserLoginReg } = require('../middlewares/reg.middleware');
 const { userCheckAuthData, userCheckIsAdministrator, userCheckIsAuthorized } = require('../middlewares/auth.middleware');
@@ -23,7 +23,7 @@ router.post('/registration', [checkUserRegData, checkUserLoginReg], async (req, 
   res.redirect('/');
 });
 router.post('/authorization', [userCheckAuthData], (req, res) => {
-  console.log("User had been successfully authorized in application");
+  res.send(`${req.body.login} had been successfully authorized in application`);
 
   res.redirect('/');
 });

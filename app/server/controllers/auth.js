@@ -1,12 +1,8 @@
 const bcrypt = require('bcrypt');
-const client = require('./database');
-const { redisClient } = require('./redis/redis');
+const client = require('../database');
+const { redisClient } = require('../redis/redis');
 
 class Auth {
-  async authorization(user) {
-    console.log(user);
-  }
-
   async registration(user) {
     const secPassword = bcrypt.hashSync(user.getPassword, 7);
 

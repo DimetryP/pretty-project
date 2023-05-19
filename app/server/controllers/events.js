@@ -1,5 +1,5 @@
 const { execFile } = require('node:child_process');
-const client = require('./database');
+const client = require('../database');
 
 
 class Events {

@@ -14,8 +14,12 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - ./app/server/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./app/server/sql/drop_events_table.sql:/drop_events_table.sql
+      - ./app/server/database/clear_events.sh:/clear_events.sh
     ports:
       - ${PG_PORT}:${PG_PORT}
+    networks:
+      - local_network
 
   redis:
     image: redis:6.2
@@ -26,6 +30,8 @@ services:
       - ./app/server/redis/redis.conf:/etc/redis/redis.conf
     ports:
       - ${REDIS_PORT}:${REDIS_PORT}
+    networks:
+      - local_network
 
 networks:
   local_network:

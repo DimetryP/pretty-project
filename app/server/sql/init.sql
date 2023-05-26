@@ -28,12 +28,11 @@ CREATE TABLE visitors(
 
 CREATE TABLE events(
   id BIGINT UNIQUE PRIMARY KEY,
-  title_id INT NOT NULL,
+  title_id INT NOT NULL REFERENCES event_types(id) ON DELETE CASCADE,
   description VARCHAR(255),
   startTime TIME NOT NULL,
   endTime TIME NOT NULL,
   createDate DATE NOT NULL DEFAULT CURRENT_DATE,
-  FOREIGN KEY(title_id) REFERENCES event_types(id),
   user_id INT REFERENCES users(id) NOT NULL,
   visitor_id INT REFERENCES visitors(id)
 );

@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const router = require('./routes/route');
-const client = require('./database');
+const client = require('./database/database');
 const { redisClient } = require('./redis/redis');
 
 const app = express();

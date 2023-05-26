@@ -1,6 +1,4 @@
-const { execFile } = require('node:child_process');
-const client = require('../database');
-
+const client = require('../database/database');
 
 class Events {
   constructor() {}
@@ -15,14 +13,6 @@ class Events {
 
   async addEvent(event) {
      const f = await client.query('INSERT INTO events');
-  }
-
-  destroyEvents() {
-     const myShellScript = execFile('clear_events.sh', { encoding: 'us-ascii' }, (err, stdout, stderr) => {
-       if(error) throw error;
-
-       console.log(stdout);
-     }); 
   }
 }
 

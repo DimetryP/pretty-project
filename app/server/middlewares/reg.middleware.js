@@ -1,4 +1,4 @@
-const client = require('../database');
+const client = require('../database/database');
 
 const checkUserRegData = function(req, res, next) {
   const { login, password } = req.body;

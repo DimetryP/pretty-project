@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const client = require('../database');
+const client = require('../database/database');
 const { redisClient } = require('../redis/redis');
 
 const userCheckAuthData = async function(req, res, next) {

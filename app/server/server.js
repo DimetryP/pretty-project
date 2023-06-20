@@ -10,13 +10,12 @@ const { redisClient } = require('./redis/redis');
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost",
+  origin: process.env.HOST,
   optionsSuccessStatus: 200
 };
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use('/', router);
 

@@ -1,22 +1,11 @@
 const user_role = "guardian" | "administrator";
+const visitor_role = ["Worker", "Director", "Inspection"];
 
 class UserModel {
   constructor(login, password, role) {
     this.login = login;
     this.password = password;
     this.role = role;
-  }
-
-  get getLogin() {
-    return this.login;
-  }
-
-  get getPassword() {
-    return this.password;
-  }
-
-  get getRole() {
-    return this.role;
   }
 }
 
@@ -27,7 +16,7 @@ class VisitorModel {
     this.surname = surname;
     this.patronymic = patronymic;
     this.visitor_role = visitor_role;
-  }
+  } 
 }
 
 class EventModel {

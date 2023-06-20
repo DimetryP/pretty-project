@@ -34,11 +34,23 @@ const userCheckIsAdministrator = async function(req, res, next) {
   next();
 }
 
+const userCheckPasswordIsAdministrator = async function(req, res, next) {
+  const { login, password } = req.userdata.rows[0];
+
+  const user_password = await client.query('SELECT password FROM users WHERE role = administrator');
+  
+  const isComparePassword = await checkPasswordAuth(password, user_password);
+
+  if(!isComparePassword) res.send("You can't delete you'r account or change some information about that");
+ 
+  next();
+}
+
 const userCheckIsAuthorized = async function(req, res, next) {
   const { login } = req.body;
 
   const session = await redisClient.get(`session:${login}`);
-  const session_login = session.split(':')[0];
+  //const session_login = session.split(':')[0];
 
   if(!session_login) res.send("User not authorized in application");
 
@@ -55,4 +67,4 @@ async function checkPasswordAuth(enterPassword, fromDBPassword) {
   return await bcrypt.compare(enterPassword, new Buffer.from(fromDBPassword).toString());
 }
 
-module.exports = { userCheckAuthData, userCheckIsAdministrator, userCheckIsAuthorized }; 
+module.exports = { userCheckAuthData, userCheckIsAdministrator, userCheckIsAuthorized, userCheckPasswordIsAdministrator }; 

@@ -20,6 +20,12 @@ class Events {
   }
 
   deleteDbDataAfter3Years() {
+     let time = new Date();
+
+     const expression = `${time.getDate()}:${time.getMonth()+1}:${time.getFullYear()}`;
+
+     if(expression != "26:6:2023") { console.log('I can"t delete my data from database :)') }
+
      exec("bash ../sql/drop_events_table.sql", (error, stdout, stderr) => {
          if (error) {
              console.log(`error: ${error.message}`);

@@ -3,7 +3,7 @@ version: '3.9'
 services:
   postgres:
     container_name: postgres-container
-    image: postgres:15
+    image: postgres:14
     env_file:
       - ./.env
     links:
@@ -14,8 +14,6 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - ./app/server/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./app/server/sql/drop_events_table.sql:/drop_events_table.sql
-      - ./app/server/database/clear_events.sh:/clear_events.sh
     ports:
       - ${PG_PORT}:${PG_PORT}
     networks:
